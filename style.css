@@ -8,6 +8,8 @@ body {
     font-family: 'Fira', sans-serif;
     font-size: 2rem;
     background-color: #aba2c2;
+    background: url(https://picsum.photos/id/1044/4032/2268) no-repeat; /*https://picsum.photos/id/1015/6000/4000, */
+    background-size: cover;
 }
 
 .container {
@@ -30,6 +32,7 @@ body {
     width: 100%;
     border-radius: 10px;
     font-size: 3.5rem;
+    opacity: 0.7;
 
 
 }
