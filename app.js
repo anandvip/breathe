@@ -14,43 +14,43 @@ let inB = () => {
     timerBi = setInterval(bI, 1000);
 };
 
-let 
-timerBi,
-timerBh,
-timerBo;
+let
+    timerBi,
+    timerBh,
+    timerBo;
 
 
 function bI() {
-    
+
     if (breathIn == -1) {
         clearTimeout(timerBi);
         console.log(clearTimeout(timerBi));
-        
+
         doBreathIn();
     } else {
         bri.innerText = breathIn + ' Slowly Breath in';
         breathIn--;
-    } 
+    }
 }
 
 function doBreathIn() {
     bri.innerText = 'Breath hold';
     bro.innerText = '_________';
     brh.innerText = '_________'
-    console.log(bri.innerHTML); 
+    console.log(bri.innerHTML);
     timerBh = setInterval(bH, 1000);
 }
 
 
 function bH() {
-    
+
     if (breathHold == -1) {
         clearTimeout(timerBh);
         doBreathHold();
     } else {
         brh.innerText = breathHold + ' Hold the breath';
         breathHold--;
-    } 
+    }
 }
 
 
@@ -71,8 +71,8 @@ function bO() {
     } else {
         bro.innerText = breathOut + ' Slowly Breath Out';
         breathOut--;
-    } 
-    
+    }
+
 }
 
 function doBreathOut() {
