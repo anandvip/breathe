@@ -51,10 +51,6 @@ body {
 
 .clk {
     font-size: 1rem;
-    display: flex;
-    flex-direction: row;
-    padding: 10px 30px;
-    justify-content: flex-end;
     background-color: #34294a;
     color: #d76677;
     letter-spacing: 0.2rem;
@@ -72,4 +68,16 @@ h3 {
     color: #fac876;
     padding-left: 20px;
     letter-spacing: 0.7rem;
+}
+
+footer,
+.clk {
+    display: flex;
+    flex-direction: row;
+    padding: 10px 30px;
+    justify-content: flex-end;
+}
+
+.va {
+    font-size: 0.6rem;
 }
