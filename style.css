@@ -8,17 +8,22 @@ body {
     font-family: 'Fira', sans-serif;
     font-size: 2rem;
     background-color: #aba2c2;
-    background: url(https://picsum.photos/id/1044/4032/2268) no-repeat; /*https://picsum.photos/id/1015/6000/4000, */
+    background: url(https://picsum.photos/id/471/3264/1824) no-repeat;
+    /*https://picsum.photos/id/1015/6000/4000, https://picsum.photos/id/1044/4032/2268*/
     background-size: cover;
 }
 
 .container {
     width: 100vw;
     height: 80vh;
-    margin-top: 20px;
+    margin-top: 10px;
     display: grid;
     grid-gap: 7px;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "in"
+        "hold"
+        "out"
 }
 
 .in,
@@ -30,24 +35,29 @@ body {
     padding: 20px;
     margin: 0 auto;
     width: 100%;
-    border-radius: 10px;
-    font-size: 3.5rem;
+    border-radius: 3px;
+    font-size: 2rem;
     opacity: 0.7;
+    text-align: center;
 
 
 }
 
+
 .in {
+    grid-area: in;
     background-color: #f9eecb;
     color: #c6808e;
 }
 
 .hold {
+    grid-area: hold;
     background-color: #241858;
     color: #80cfba;
 }
 
 .out {
+    grid-area: out;
     background-color: #fac960;
     color: #d749e4;
 }
@@ -57,11 +67,12 @@ body {
     background-color: #34294a;
     color: #d76677;
     letter-spacing: 0.2rem;
+    padding: 1px;
 }
 
 header {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     background-color: #423c62;
 
 }
@@ -77,10 +88,39 @@ footer,
 .clk {
     display: flex;
     flex-direction: row;
-    padding: 10px 30px;
     justify-content: flex-end;
 }
 
 .va {
+    background-color: rgba(244, 248, 252, 0.5);
     font-size: 0.6rem;
+    padding: 10px;
+    width: 180px;
+}
+
+@media (min-width: 850px) {
+
+    .container {
+        width: 100vw;
+        height: 60vh;
+        margin-top: 20px;
+        display: grid;
+        grid-gap: 7px;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-areas:
+            "in hold out"
+    }
+
+    .in,
+    .hold,
+    .out {
+        border-radius: 10px;
+    }
+
+    header{
+        grid-template-columns: 1fr 1fr;
+    }
+    .clk{
+        padding: 10px 30px;
+    }
 }
