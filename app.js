@@ -54,7 +54,7 @@ let bH = () => {
         clearTimeout(timerBh);
         doBreathHold();
     } else {
-        brh.innerText = `${breathHold} ${bFn(breathStage[1])}`;
+        brh.innerText = `${breathHold} \n\n ${bFn(breathStage[1])}`;
         breathHold--;
     }
 }
@@ -75,7 +75,7 @@ let bO = () => {
         clearTimeout(timerBo);
         doBreathOut();
     } else {
-        bro.innerText = `${breathOut} ${bFn(breathStage[2])}`;
+        bro.innerText = `${breathOut} \n\n ${bFn(breathStage[2])}`;
         breathOut--;
     }
 

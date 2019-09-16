@@ -64,7 +64,7 @@ body {
 
 .clk {
     font-size: 1rem;
-    background-color: #34294a;
+    background-color: #34294aa4;
     color: #d76677;
     letter-spacing: 0.2rem;
     padding: 1px;
@@ -73,7 +73,7 @@ body {
 header {
     display: grid;
     grid-template-columns: 1fr;
-    background-color: #423c62;
+    background-color: #423c62b9;
 
 }
 
@@ -102,7 +102,7 @@ footer,
 
     .container {
         width: 100vw;
-        height: 80vh;
+        height: 100vh;
         margin-top: 20px;
         display: grid;
         grid-gap: 7px;
