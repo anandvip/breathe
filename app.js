@@ -14,7 +14,7 @@ let inB = () => {
     timerBi = setInterval(bI, 1000);
 };
 
-window.onload = () => { window.setTimeout(inB(), 6000) }
+window.onload = () => { window.setTimeout(inB(), 6000) };
 
 //timer to set interval for countdown in miliseconds and call the function
 let
@@ -37,15 +37,15 @@ let bI = () => {
         bri.innerText = `${counter}  \n \n ${bFn(breathStage[0])}`;
         breathIn--;
     }
-}
+};
 
 let doBreathIn = () => {
     bri.innerText = 'Breath hold';
     bro.innerText = '___◁◁◁◁___';
-    brh.innerText = '_________'
+    brh.innerText = '_________';
     console.log(bri.innerHTML);
     timerBh = setInterval(bH, 1000);
-}
+};
 
 //breath hold
 let bH = () => {
@@ -57,7 +57,7 @@ let bH = () => {
         brh.innerText = `${breathHold} \n \n ${bFn(breathStage[1])}`;
         breathHold--;
     }
-}
+};
 
 
 let doBreathHold = () => {
@@ -67,7 +67,7 @@ let doBreathHold = () => {
     console.log(brh.innerHTML);
     timerBo = setInterval(bO, 1000);
 
-}
+};
 
 //breath out
 let bO = () => {
@@ -79,7 +79,7 @@ let bO = () => {
         breathOut--;
     }
 
-}
+};
 
 let doBreathOut = () => {
     bro.innerText = 'Relax Breath';
@@ -87,11 +87,11 @@ let doBreathOut = () => {
     brh.innerText = '_________';
     console.log(bro.innerHTML);
     window.setTimeout(thodaRuko, 2 * 6000)
-}
+};
 
 let thodaRuko = () => {
     document.location.reload()
-}
+};
 
 //clock 
 
@@ -99,8 +99,13 @@ let displayTime = () => {
     let date = new Date();
     let time = date.toLocaleTimeString();
     document.querySelector('.clock').textContent = time;
-}
+};
 displayTime();
 const createClock = setInterval(displayTime, 1000);
 
 
+const bottomVisible = () =>
+  document.documentElement.clientHeight + window.scrollY >=
+  (document.documentElement.scrollHeight || document.documentElement.clientHeight);
+
+  bottomVisible();
