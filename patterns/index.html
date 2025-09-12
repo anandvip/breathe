@@ -114,6 +114,20 @@
 
     footer{margin-top:24px; color: var(--muted); font-size:.85rem}
     .note{border-left:3px solid var(--accent); padding:.6rem .8rem; background:#0c1218; border-radius:8px}
+      /* === Overrides to fix desktop switching === */
+    @media (min-width: 900px){
+      .thead{display:grid; grid-template-columns: 180px 220px 1fr 1fr 1fr; border-radius: var(--radius); overflow:hidden; box-shadow: var(--shadow); border:1px solid rgba(255,255,255,.08);}    
+      .table{gap: 0.6rem}
+      .row{ grid-template-columns: 180px 220px 1fr 1fr 1fr; grid-template-areas: none; align-items:start; }
+      .row .content, .row .grid{ display: contents; }
+      .row .label{ display:none; }
+      .row .head{ grid-column:1; display:flex; align-items:center; justify-content:center; border-right:1px solid rgba(255,255,255,.06); padding-block: 16px; }
+      .row .value{ border-left: 1px solid rgba(255,255,255,.06); min-height:100%; }
+      .row .value:nth-of-type(1){ grid-column: 2; padding: 12px 14px; }
+      .row .value:nth-of-type(2){ grid-column: 3; padding: 12px 14px; }
+      .row .value:nth-of-type(3){ grid-column: 4; padding: 12px 14px; }
+      .row .value:nth-of-type(4){ grid-column: 5; padding: 12px 14px; }
+    }
   </style>
 </head>
 <body>
