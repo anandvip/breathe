@@ -640,6 +640,217 @@
             margin: 0 10px;
         }
 
+        /* Mobile Menu System */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 300;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            z-index: 250;
+            padding: 80px 20px 20px;
+            backdrop-filter: blur(15px);
+            overflow-y: auto;
+        }
+
+        .mobile-menu-overlay.show {
+            display: block;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .mobile-menu-title {
+            font-size: 1.5rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .mobile-close-btn {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-section {
+            margin-bottom: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .mobile-section-header {
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .mobile-section-header:hover {
+            background: #5a67d8;
+        }
+
+        .mobile-section-content {
+            background: white;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .mobile-section-content.expanded {
+            padding: 20px;
+            max-height: 1000px;
+        }
+
+        .mobile-section-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-section-arrow.rotated {
+            transform: rotate(180deg);
+        }
+
+        /* Session Complete Overlay */
+        .session-complete-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 400;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .session-complete-overlay.show {
+            display: flex;
+        }
+
+        .session-complete-content {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .session-complete-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .session-complete-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .session-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .session-stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .session-stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .session-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .session-complete-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .session-complete-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .session-complete-btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .session-complete-btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .session-complete-btn:hover {
+            transform: translateY(-2px);
+        }
+
         .modal-content {
             background: white;
             padding: 30px;
@@ -667,56 +878,119 @@
 
         @media (max-width: 768px) {
             .main-content {
-                grid-template-columns: auto 1fr auto;
-                gap: 10px;
-                padding: 0 10px;
+                grid-template-columns: 1fr;
+                gap: 0;
+                padding: 0;
+                height: 100vh;
+            }
+            
+            .side-panel {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .header {
+                padding: 80px 20px 20px;
+                margin-bottom: 0;
             }
             
             .header h1 {
                 font-size: 2rem;
             }
             
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .breath-display {
+                flex: 1;
+                min-height: calc(100vh - 200px);
+                margin: 0;
+                border-radius: 0;
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(20px);
+                padding: 20px;
+                justify-content: center;
+            }
+            
             .timer-display {
-                font-size: 2rem;
+                font-size: 3rem;
+                margin-bottom: 15px;
             }
             
             .breath-circle {
-                width: 150px;
-                height: 150px;
+                width: 220px;
+                height: 220px;
+                margin: 20px 0;
             }
-
-            .controls, .stats {
-                width: 280px;
-                max-height: 400px;
-                font-size: 14px;
+            
+            .breath-text {
+                font-size: 1.8rem;
+                margin-bottom: 25px;
             }
-
-            .controls.expanded {
-                transform: translateX(-20px);
+            
+            .mantra-text {
+                font-size: 1.1rem;
+                max-width: 90%;
+                margin-top: 25px;
             }
-
-            .stats.expanded {
-                transform: translateX(20px);
+            
+            .essential-info {
+                font-size: 1rem;
+                margin-bottom: 20px;
             }
-
-            .panel-toggle {
+            
+            .pattern-indicator {
+                padding: 6px 15px;
+                font-size: 1rem;
+                margin: 0 15px;
+            }
+            
+            .main-controls {
+                margin-top: 30px;
+                gap: 20px;
+            }
+            
+            .btn {
+                padding: 18px 35px;
+                font-size: 18px;
+                border-radius: 20px;
+            }
+            
+            .help-toggle {
+                top: 20px;
+                right: 20px;
                 width: 40px;
                 height: 40px;
-                font-size: 1.2rem;
+                font-size: 16px;
             }
-
+            
             .help-content {
-                padding: 25px;
-                margin: 20px;
+                padding: 20px;
+                margin: 10px;
+                max-height: 85vh;
             }
-
-            .essential-info {
-                font-size: 0.8rem;
+            
+            .statutory-footer {
+                font-size: 11px;
+                padding: 12px 15px;
             }
-
-            .pattern-indicator {
-                padding: 3px 8px;
-                font-size: 0.8rem;
+            
+            .toast-notification {
+                bottom: 15px;
+                right: 15px;
+                left: 15px;
+                max-width: none;
+                transform: translateY(400px);
+            }
+            
+            .toast-notification.show {
+                transform: translateY(0);
             }
         }
 
@@ -767,6 +1041,180 @@
     <div class="background-animation bg-neutral" id="backgroundAnimation"></div>
     
     <div class="container">
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+            <div class="mobile-menu-header">
+                <div class="mobile-menu-title">Practice Settings</div>
+                <button class="mobile-close-btn" onclick="closeMobileMenu()">×</button>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="mobile-section">
+                <div class="mobile-section-header" onclick="toggleMobileSection('settings')">
+                    <span>⚙️ Practice Settings</span>
+                    <span class="mobile-section-arrow" id="settingsArrow">▼</span>
+                </div>
+                <div class="mobile-section-content" id="mobileSettingsContent">
+                    <div class="control-group">
+                        <label>Preset Patterns</label>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" onclick="setPreset(4,7,7)">4-7-7</button>
+                            <button class="preset-btn" onclick="setPreset(3,6,9)">3-6-9</button>
+                            <button class="preset-btn" onclick="setPreset(4,4,4)">4-4-4</button>
+                            <button class="preset-btn" onclick="setPreset(4,7,8)">4-7-8</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="mobileInhaleTime">Inhale Duration (seconds)</label>
+                        <input type="number" id="mobileInhaleTime" min="1" max="10" value="4">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="mobileExhaleTime">Exhale Duration (seconds)</label>
+                        <input type="number" id="mobileExhaleTime" min="1" max="10" value="6">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="mobileEnableHold">
+                        <label for="mobileEnableHold">Enable Hold Phase (Retention/Kumbhaka)</label>
+                    </div>
+
+                    <div class="medical-warning" id="mobileHoldWarning" style="display: none;">
+                        <h4>⚠️ MEDICAL WARNING - STATUTORY DISCLAIMER</h4>
+                        <p><strong>BREATH RETENTION PRACTICES CAN BE DANGEROUS FOR:</strong></p>
+                        <p>• Heart patients, cardiac conditions, arrhythmias<br>
+                        • High/low blood pressure conditions<br>
+                        • Respiratory disorders, asthma, COPD<br>
+                        • Pregnant women<br>
+                        • Anxiety, panic disorders<br>
+                        • Any serious medical condition</p>
+                        <p><strong>CONSULT YOUR HEALTHCARE PROVIDER BEFORE PRACTICING BREATH RETENTION.</strong></p>
+                        <p><em>This tool is for educational purposes only and does not constitute medical advice.</em></p>
+                    </div>
+
+                    <div class="control-group" id="mobileHoldControls" style="display: none;">
+                        <label for="mobileHoldTime">Hold Duration (seconds)</label>
+                        <input type="number" id="mobileHoldTime" min="1" max="15" value="2">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="mobileSessionDuration">Session Duration (minutes)</label>
+                        <input type="number" id="mobileSessionDuration" min="1" max="60" value="5">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="mobileEnableSound">
+                        <label for="mobileEnableSound">Sound Cues</label>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="mobileInhaleMantra">Inhale Mantra</label>
+                        <input type="text" id="mobileInhaleMantra" placeholder="I am not the body" value="I am not the body">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="mobileExhaleMantra">Exhale Mantra</label>
+                        <input type="text" id="mobileExhaleMantra" placeholder="I am not even the mind" value="I am not even the mind">
+                    </div>
+
+                    <div class="control-group" id="mobileHoldMantraControls" style="display: none;">
+                        <label for="mobileHoldMantra">Hold Mantra</label>
+                        <input type="text" id="mobileHoldMantra" placeholder="I am pure awareness" value="I am pure awareness">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="mobile-section">
+                <div class="mobile-section-header" onclick="toggleMobileSection('stats')">
+                    <span>📊 Session Stats</span>
+                    <span class="mobile-section-arrow" id="statsArrow">▼</span>
+                </div>
+                <div class="mobile-section-content" id="mobileStatsContent">
+                    <div class="stat-item">
+                        <span>Current Cycle:</span>
+                        <span id="mobileCurrentCycle">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Total Breaths:</span>
+                        <span id="mobileTotalBreaths">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Time Remaining:</span>
+                        <span id="mobileTimeRemaining">--:--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Current Phase:</span>
+                        <span id="mobileCurrentPhase">Ready</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Pattern:</span>
+                        <span id="mobileCurrentPattern">4-6</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Estimated Breaths:</span>
+                        <span id="mobileEstimatedBreaths">50</span>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px; color: #667eea;">🌟 Today's Practice</h3>
+                    <div class="stat-item">
+                        <span>Sessions:</span>
+                        <span id="mobileDailySessions">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Total Minutes:</span>
+                        <span id="mobileDailyMinutes">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Meaningful Breaths:</span>
+                        <span id="mobileDailyBreaths">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Session Complete Overlay -->
+        <div class="session-complete-overlay" id="sessionCompleteOverlay">
+            <div class="session-complete-content">
+                <div class="session-complete-title">🎉 Well Done!</div>
+                <div class="session-complete-subtitle">Your practice session is complete</div>
+                
+                <div class="session-stats-grid">
+                    <div class="session-stat-card">
+                        <div class="session-stat-number" id="finalBreathCount">0</div>
+                        <div class="session-stat-label">Meaningful Breaths</div>
+                    </div>
+                    <div class="session-stat-card">
+                        <div class="session-stat-number" id="finalSessionTime">0:00</div>
+                        <div class="session-stat-label">Practice Time</div>
+                    </div>
+                    <div class="session-stat-card">
+                        <div class="session-stat-number" id="finalPatternUsed">4-6</div>
+                        <div class="session-stat-label">Pattern Used</div>
+                    </div>
+                    <div class="session-stat-card">
+                        <div class="session-stat-number" id="finalCyclesCompleted">0</div>
+                        <div class="session-stat-label">Breath Cycles</div>
+                    </div>
+                </div>
+                
+                <div class="session-complete-actions">
+                    <button class="session-complete-btn session-complete-btn-primary" onclick="startNewSession()">
+                        🧘‍♀️ Start Again
+                    </button>
+                    <button class="session-complete-btn session-complete-btn-secondary" onclick="closeSessionComplete()">
+                        📊 View Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="header">
             <h1>🧘‍♀️ Breath Practice Tool</h1>
             <p>Develop consistency and muscle memory for independent breathwork practice</p>
@@ -1099,12 +1547,110 @@
             updatePattern();
             loadDailyStats();
             checkDisclaimerPreference();
+            syncMobileInputs();
             
             // Event listeners
             enableHoldCheckbox.addEventListener('change', toggleHoldControls);
+            document.getElementById('mobileEnableHold').addEventListener('change', toggleMobileHoldControls);
+            
             [inhaleTimeInput, exhaleTimeInput, holdTimeInput, sessionDurationInput].forEach(input => {
                 input.addEventListener('change', updatePattern);
             });
+            
+            // Mobile input sync
+            ['inhaleTime', 'exhaleTime', 'holdTime', 'sessionDuration', 'enableSound', 'inhaleMantra', 'exhaleMantra', 'holdMantra'].forEach(id => {
+                const desktopEl = document.getElementById(id);
+                const mobileEl = document.getElementById('mobile' + id.charAt(0).toUpperCase() + id.slice(1));
+                
+                if (desktopEl && mobileEl) {
+                    desktopEl.addEventListener('input', () => syncToMobile(id));
+                    mobileEl.addEventListener('input', () => syncToDesktop(id));
+                }
+            });
+        }
+
+        function syncMobileInputs() {
+            // Sync all initial values from desktop to mobile
+            ['inhaleTime', 'exhaleTime', 'holdTime', 'sessionDuration', 'enableSound', 'inhaleMantra', 'exhaleMantra', 'holdMantra'].forEach(id => {
+                syncToMobile(id);
+            });
+        }
+
+        function syncToMobile(id) {
+            const desktopEl = document.getElementById(id);
+            const mobileEl = document.getElementById('mobile' + id.charAt(0).toUpperCase() + id.slice(1));
+            
+            if (desktopEl && mobileEl) {
+                if (desktopEl.type === 'checkbox') {
+                    mobileEl.checked = desktopEl.checked;
+                } else {
+                    mobileEl.value = desktopEl.value;
+                }
+            }
+        }
+
+        function syncToDesktop(id) {
+            const desktopEl = document.getElementById(id);
+            const mobileEl = document.getElementById('mobile' + id.charAt(0).toUpperCase() + id.slice(1));
+            
+            if (desktopEl && mobileEl) {
+                if (desktopEl.type === 'checkbox') {
+                    desktopEl.checked = mobileEl.checked;
+                } else {
+                    desktopEl.value = mobileEl.value;
+                }
+                updatePattern();
+            }
+        }
+
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            overlay.classList.toggle('show');
+        }
+
+        function closeMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            overlay.classList.remove('show');
+        }
+
+        function toggleMobileSection(section) {
+            const content = document.getElementById('mobile' + section.charAt(0).toUpperCase() + section.slice(1) + 'Content');
+            const arrow = document.getElementById(section + 'Arrow');
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                arrow.classList.remove('rotated');
+            } else {
+                // Close other sections
+                document.querySelectorAll('.mobile-section-content').forEach(el => {
+                    el.classList.remove('expanded');
+                });
+                document.querySelectorAll('.mobile-section-arrow').forEach(el => {
+                    el.classList.remove('rotated');
+                });
+                
+                // Open this section
+                content.classList.add('expanded');
+                arrow.classList.add('rotated');
+            }
+        }
+
+        function toggleMobileHoldControls() {
+            const mobileEnableHold = document.getElementById('mobileEnableHold');
+            if (mobileEnableHold.checked) {
+                document.getElementById('heartWarningModal').style.display = 'flex';
+                // Set a flag to know this came from mobile
+                window.mobileHoldRequest = true;
+            } else {
+                document.getElementById('mobileHoldControls').style.display = 'none';
+                document.getElementById('mobileHoldMantraControls').style.display = 'none';
+                document.getElementById('mobileHoldWarning').style.display = 'none';
+                // Sync to desktop
+                enableHoldCheckbox.checked = false;
+                toggleHoldControls();
+                updatePattern();
+            }
         }
 
         function checkDisclaimerPreference() {
@@ -1131,7 +1677,17 @@
             // User has accepted responsibility
             document.getElementById('heartWarningModal').style.display = 'none';
             
-            // Show the controls and warning
+            if (window.mobileHoldRequest) {
+                // Show mobile controls and warning
+                document.getElementById('mobileHoldControls').style.display = 'block';
+                document.getElementById('mobileHoldMantraControls').style.display = 'block';
+                document.getElementById('mobileHoldWarning').style.display = 'block';
+                // Sync to desktop
+                enableHoldCheckbox.checked = true;
+                window.mobileHoldRequest = false;
+            }
+            
+            // Show desktop controls and warning
             const holdControls = document.getElementById('holdControls');
             const holdMantraControls = document.getElementById('holdMantraControls');
             const holdWarning = document.getElementById('holdWarning');
@@ -1146,6 +1702,11 @@
             // User chose safety - uncheck the box
             document.getElementById('heartWarningModal').style.display = 'none';
             enableHoldCheckbox.checked = false;
+            
+            if (window.mobileHoldRequest) {
+                document.getElementById('mobileEnableHold').checked = false;
+                window.mobileHoldRequest = false;
+            }
         }
 
         function updatePattern() {
