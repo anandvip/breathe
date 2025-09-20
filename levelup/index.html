@@ -456,6 +456,132 @@
             font-size: 12px;
             color: #666;
             border-top: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .statutory-footer.hidden {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .close-disclaimer {
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #999;
+            cursor: pointer;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-disclaimer:hover {
+            background: rgba(0,0,0,0.1);
+            color: #666;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 350px;
+            z-index: 4000;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .toast-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .toast-title {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-content {
+            margin-bottom: 15px;
+        }
+
+        .toast-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .toast-checkbox input[type="checkbox"] {
+            width: auto;
+        }
+
+        .toast-checkbox label {
+            font-size: 13px;
+            color: #555;
+            margin: 0;
+        }
+
+        .toast-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .toast-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toast-btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .toast-btn-secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 1px solid #667eea;
         }
 
         .heart-warning-modal {
@@ -646,8 +772,28 @@
             <p>Develop consistency and muscle memory for independent breathwork practice</p>
         </div>
 
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="disclaimerToast">
+        <div class="toast-header">
+            <div class="toast-title">📋 Disclaimer Preferences</div>
+            <button class="toast-close" onclick="hideToast()">&times;</button>
+        </div>
+        <div class="toast-content">
+            <p style="font-size: 13px; color: #666; margin-bottom: 12px;">You can choose to hide this safety disclaimer in future sessions.</p>
+            <div class="toast-checkbox">
+                <input type="checkbox" id="rememberChoice">
+                <label for="rememberChoice">Don't show disclaimer again - I understand the medical risks</label>
+            </div>
+        </div>
+        <div class="toast-buttons">
+            <button class="toast-btn toast-btn-secondary" onclick="hideToast()">Just This Session</button>
+            <button class="toast-btn toast-btn-primary" onclick="saveDisclaimerPreference()">Save Preference</button>
+        </div>
+    </div>
+
     <!-- Statutory Medical Disclaimer Footer -->
-    <div class="statutory-footer">
+    <div class="statutory-footer" id="statutoryFooter">
+        <button class="close-disclaimer" onclick="closeDisclaimer()" title="Close disclaimer (will reappear on page refresh)">&times;</button>
         <p><strong>STATUTORY DISCLAIMER:</strong> This breath practice tool is for educational and wellness purposes only. It does not constitute medical advice, diagnosis, or treatment. Pranayama and breath retention practices can have serious physiological effects and may be contraindicated for individuals with heart conditions, blood pressure issues, respiratory disorders, pregnancy, or other medical conditions. Always consult with a qualified healthcare provider before beginning any breathing practice program. The creators assume no responsibility for any adverse effects resulting from use of this application.</p>
     </div>
 
@@ -890,6 +1036,10 @@
             </ul>
 
             <p><em>Remember: This is your practice. Adapt everything to what feels right for your body and spiritual journey.</em></p>
+            
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                <p style="font-size: 12px; color: #999;"><strong>Note:</strong> If you've hidden the safety disclaimer and want to see it again, <a href="#" onclick="restoreDisclaimer(); closeHelp();" style="color: #667eea;">click here to restore it</a>.</p>
+            </div>
         </div>
     </div>
 
@@ -948,12 +1098,20 @@
         function initApp() {
             updatePattern();
             loadDailyStats();
+            checkDisclaimerPreference();
             
             // Event listeners
             enableHoldCheckbox.addEventListener('change', toggleHoldControls);
             [inhaleTimeInput, exhaleTimeInput, holdTimeInput, sessionDurationInput].forEach(input => {
                 input.addEventListener('change', updatePattern);
             });
+        }
+
+        function checkDisclaimerPreference() {
+            const hideDisclaimer = localStorage.getItem('hideStatutoryDisclaimer');
+            if (hideDisclaimer === 'true') {
+                document.getElementById('statutoryFooter').classList.add('hidden');
+            }
         }
 
         function toggleHoldControls() {
@@ -1046,6 +1204,53 @@
             document.getElementById('helpModal').style.display = 'none';
         }
 
+        // Disclaimer management
+        function closeDisclaimer() {
+            const footer = document.getElementById('statutoryFooter');
+            footer.classList.add('hidden');
+            
+            // Show toast after a brief delay
+            setTimeout(() => {
+                showToast();
+            }, 300);
+        }
+
+        function showToast() {
+            const toast = document.getElementById('disclaimerToast');
+            toast.classList.add('show');
+            
+            // Auto-hide after 10 seconds if user doesn't interact
+            setTimeout(() => {
+                if (toast.classList.contains('show')) {
+                    hideToast();
+                }
+            }, 10000);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('disclaimerToast');
+            toast.classList.remove('show');
+            // Reset checkbox state
+            document.getElementById('rememberChoice').checked = false;
+        }
+
+        function saveDisclaimerPreference() {
+            const rememberChoice = document.getElementById('rememberChoice').checked;
+            
+            if (rememberChoice) {
+                localStorage.setItem('hideStatutoryDisclaimer', 'true');
+            }
+            
+            hideToast();
+        }
+
+        function restoreDisclaimer() {
+            // Function to restore disclaimer (can be called from help menu if needed)
+            localStorage.removeItem('hideStatutoryDisclaimer');
+            const footer = document.getElementById('statutoryFooter');
+            footer.classList.remove('hidden');
+        }
+
         // Close panels when clicking outside
         document.addEventListener('click', function(event) {
             const settingsPanel = document.getElementById('settingsPanel');
@@ -1055,6 +1260,7 @@
             const helpModal = document.getElementById('helpModal');
             const helpContent = document.querySelector('.help-content');
             const helpToggle = document.querySelector('.help-toggle');
+            const disclaimerToast = document.getElementById('disclaimerToast');
             
             // Close settings panel
             if (!settingsPanel.contains(event.target) && !settingsToggle.contains(event.target)) {
@@ -1073,6 +1279,12 @@
                 !helpContent.contains(event.target) && 
                 !helpToggle.contains(event.target)) {
                 closeHelp();
+            }
+            
+            // Close toast when clicking outside
+            if (disclaimerToast.classList.contains('show') && 
+                !disclaimerToast.contains(event.target)) {
+                hideToast();
             }
         });
 
