@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breath Practice Consistency Tool</title>
+    <style>
+        /*
+        Date Created: September 20, 2025
+        Tool: Claude Sonnet 4
+        Prompt: Create a breath practice consistency tool with adjustable inhale/exhale times, 
+        visual circle animation, optional hold phases, safety confirmations, preset patterns, 
+        color transitions, optional sound cues, session timer, and customizable mantras for yogic practice.
+        
+        README.md:
+        # Breath Practice Consistency Tool
+        
+        ## Purpose
+        This web application is designed to help yogic practitioners develop breath pattern consistency 
+        and muscle memory for independent breathwork practice. It supports the journey toward samadhi 
+        entrance and exit in natural cosmic rhythm.
+        
+        ## Features
+        - Adjustable inhale/exhale timing (with safety limits)
+        - Visual breathing animation with expanding/contracting circles
+        - Optional retention (kumbhaka) phases
+        - Color transitions synchronized with breath phases
+        - Customizable mantras for each breath phase
+        - Session timer with adjustable duration
+        - Preset breathing patterns (4-7-7, 3-6-9, 4-4-4)
+        - Optional sound cues
+        - Safety confirmations for extended patterns
+        - Simple practice tracking
+        
+        ## Usage
+        1. Set your desired inhale/exhale/hold times
+        2. Choose optional mantras for each phase
+        3. Start your practice session
+        4. Follow the visual circle animation
+        5. Develop timing muscle memory for independent practice
+        
+        This tool serves practitioners on the yogic path seeking to internalize breath patterns 
+        for deeper meditative states and cosmic rhythm alignment.
+        */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 20px;
+            align-items: start;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .side-panel {
+            position: relative;
+            min-height: 400px;
+        }
+
+        .panel-toggle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            margin-bottom: 10px;
+        }
+
+        .panel-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .panel-toggle.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .controls, .stats {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            position: absolute;
+            top: 70px;
+            width: 320px;
+            max-height: 500px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 100;
+        }
+
+        .controls.expanded {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .stats {
+            right: 0;
+            transform: translateX(100%);
+        }
+
+        .stats.expanded {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .help-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #667eea;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .help-toggle:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .breath-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .breath-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+            border: 3px solid rgba(255,255,255,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 0 50px rgba(255,255,255,0.3);
+        }
+
+        .breath-circle.inhaling {
+            transform: scale(1.5);
+            background: radial-gradient(circle, rgba(135, 206, 235, 0.4) 0%, rgba(135, 206, 235, 0.1) 100%);
+            border-color: rgba(135, 206, 235, 0.8);
+            box-shadow: 0 0 80px rgba(135, 206, 235, 0.5);
+        }
+
+        .breath-circle.exhaling {
+            transform: scale(0.8);
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.4) 0%, rgba(255, 182, 193, 0.1) 100%);
+            border-color: rgba(255, 182, 193, 0.8);
+            box-shadow: 0 0 80px rgba(255, 182, 193, 0.5);
+        }
+
+        .breath-circle.holding {
+            transform: scale(1.2);
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, rgba(255, 215, 0, 0.1) 100%);
+            border-color: rgba(255, 215, 0, 0.8);
+            box-shadow: 0 0 80px rgba(255, 215, 0, 0.5);
+        }
+
+        .breath-text {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        .mantra-text {
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            font-style: italic;
+            text-align: center;
+            margin-top: 20px;
+            max-width: 300px;
+            line-height: 1.4;
+        }
+
+        .timer-display {
+            color: white;
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .session-info {
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .control-group input, .control-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .control-group input:focus, .control-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .preset-btn {
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .main-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c53030;
+        }
+
+        .stats h3 {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .help-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help-content {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .help-content h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .help-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .help-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .medical-warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #856404;
+        }
+
+        .medical-warning h4 {
+            color: #d9534f;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .medical-warning p {
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .medical-warning strong {
+            color: #d9534f;
+        }
+
+        .statutory-footer {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .heart-warning-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .heart-warning-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            border: 3px solid #d9534f;
+        }
+
+        .heart-warning-content h3 {
+            color: #d9534f;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-help {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .essential-info {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .pattern-indicator {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal h3 {
+            margin-bottom: 15px;
+            color: #e53e3e;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: auto 1fr auto;
+                gap: 10px;
+                padding: 0 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .timer-display {
+                font-size: 2rem;
+            }
+            
+            .breath-circle {
+                width: 150px;
+                height: 150px;
+            }
+
+            .controls, .stats {
+                width: 280px;
+                max-height: 400px;
+                font-size: 14px;
+            }
+
+            .controls.expanded {
+                transform: translateX(-20px);
+            }
+
+            .stats.expanded {
+                transform: translateX(20px);
+            }
+
+            .panel-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .help-content {
+                padding: 25px;
+                margin: 20px;
+            }
+
+            .essential-info {
+                font-size: 0.8rem;
+            }
+
+            .pattern-indicator {
+                padding: 3px 8px;
+                font-size: 0.8rem;
+            }
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: scale(0);
+            animation: ripple-animation 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            transition: background 4s ease;
+        }
+
+        .bg-inhale {
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%);
+        }
+
+        .bg-exhale {
+            background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%);
+        }
+
+        .bg-hold {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        }
+
+        .bg-neutral {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation bg-neutral" id="backgroundAnimation"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🧘‍♀️ Breath Practice Tool</h1>
+            <p>Develop consistency and muscle memory for independent breathwork practice</p>
+        </div>
+
+    <!-- Statutory Medical Disclaimer Footer -->
+    <div class="statutory-footer">
+        <p><strong>STATUTORY DISCLAIMER:</strong> This breath practice tool is for educational and wellness purposes only. It does not constitute medical advice, diagnosis, or treatment. Pranayama and breath retention practices can have serious physiological effects and may be contraindicated for individuals with heart conditions, blood pressure issues, respiratory disorders, pregnancy, or other medical conditions. Always consult with a qualified healthcare provider before beginning any breathing practice program. The creators assume no responsibility for any adverse effects resulting from use of this application.</p>
+    </div>
+
+        <div class="main-content">
+            <!-- Left Panel - Controls -->
+            <div class="side-panel">
+                <button class="panel-toggle" id="settingsToggle" onclick="togglePanel('settings')" title="Practice Settings">
+                    ⚙️
+                </button>
+                <div class="controls" id="settingsPanel">
+                    <h3>⚙️ Practice Settings</h3>
+                    
+                    <div class="control-group">
+                        <label>Preset Patterns</label>
+                        <div class="preset-buttons">
+                            <button class="preset-btn" onclick="setPreset(4,7,7)">4-7-7</button>
+                            <button class="preset-btn" onclick="setPreset(3,6,9)">3-6-9</button>
+                            <button class="preset-btn" onclick="setPreset(4,4,4)">4-4-4</button>
+                            <button class="preset-btn" onclick="setPreset(4,7,8)">4-7-8</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="inhaleTime">Inhale Duration (seconds)</label>
+                        <input type="number" id="inhaleTime" min="1" max="10" value="4">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="exhaleTime">Exhale Duration (seconds)</label>
+                        <input type="number" id="exhaleTime" min="1" max="10" value="6">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="enableHold">
+                        <label for="enableHold">Enable Hold Phase (Retention/Kumbhaka)</label>
+                    </div>
+
+                    <div class="medical-warning" id="holdWarning" style="display: none;">
+                        <h4>⚠️ MEDICAL WARNING - STATUTORY DISCLAIMER</h4>
+                        <p><strong>BREATH RETENTION PRACTICES CAN BE DANGEROUS FOR:</strong></p>
+                        <p>• Heart patients, cardiac conditions, arrhythmias<br>
+                        • High/low blood pressure conditions<br>
+                        • Respiratory disorders, asthma, COPD<br>
+                        • Pregnant women<br>
+                        • Anxiety, panic disorders<br>
+                        • Any serious medical condition</p>
+                        <p><strong>CONSULT YOUR HEALTHCARE PROVIDER BEFORE PRACTICING BREATH RETENTION.</strong></p>
+                        <p><em>This tool is for educational purposes only and does not constitute medical advice.</em></p>
+                    </div>
+
+                    <div class="control-group" id="holdControls" style="display: none;">
+                        <label for="holdTime">Hold Duration (seconds)</label>
+                        <input type="number" id="holdTime" min="1" max="15" value="2">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="sessionDuration">Session Duration (minutes)</label>
+                        <input type="number" id="sessionDuration" min="1" max="60" value="5">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="enableSound">
+                        <label for="enableSound">Sound Cues</label>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="inhaleMantra">Inhale Mantra</label>
+                        <input type="text" id="inhaleMantra" placeholder="I am not the body" value="I am not the body">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="exhaleMantra">Exhale Mantra</label>
+                        <input type="text" id="exhaleMantra" placeholder="I am not even the mind" value="I am not even the mind">
+                    </div>
+
+                    <div class="control-group" id="holdMantraControls" style="display: none;">
+                        <label for="holdMantra">Hold Mantra</label>
+                        <input type="text" id="holdMantra" placeholder="I am pure awareness" value="I am pure awareness">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Central Breath Display -->
+            <div class="breath-display">
+                <button class="help-toggle" onclick="showHelp()" title="Beginner's Guide">i</button>
+                
+                <div class="timer-display" id="timerDisplay">5:00</div>
+                <div class="essential-info">
+                    <span class="pattern-indicator" id="currentPatternDisplay">4-6</span>
+                    <span id="timeRemainingDisplay">5:00 remaining</span>
+                </div>
+                <div class="session-info" id="sessionInfo">Click Start to begin your practice</div>
+                <div class="breath-text" id="breathText">Ready to begin</div>
+                <div class="breath-circle" id="breathCircle">
+                    <div style="font-size: 2rem;">🫁</div>
+                </div>
+                <div class="mantra-text" id="mantraText"></div>
+                
+                <div class="main-controls">
+                    <button class="btn btn-primary" id="startBtn" onclick="startSession()">
+                        ▶️ Start Practice
+                    </button>
+                    <button class="btn btn-secondary hidden" id="pauseBtn" onclick="pauseSession()">
+                        ⏸️ Pause
+                    </button>
+                    <button class="btn btn-danger hidden" id="stopBtn" onclick="stopSession()">
+                        ⏹️ Stop
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel - Stats -->
+            <div class="side-panel">
+                <button class="panel-toggle" id="statsToggle" onclick="togglePanel('stats')" title="Session Statistics">
+                    📊
+                </button>
+                <div class="stats" id="statsPanel">
+                    <h3>📊 Session Stats</h3>
+                    <div class="stat-item">
+                        <span>Current Cycle:</span>
+                        <span id="currentCycle">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Total Breaths:</span>
+                        <span id="totalBreaths">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Time Remaining:</span>
+                        <span id="timeRemaining">--:--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Current Phase:</span>
+                        <span id="currentPhase">Ready</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Pattern:</span>
+                        <span id="currentPattern">4-6</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Estimated Breaths:</span>
+                        <span id="estimatedBreaths">50</span>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px;">🌟 Today's Practice</h3>
+                    <div class="stat-item">
+                        <span>Sessions:</span>
+                        <span id="dailySessions">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Total Minutes:</span>
+                        <span id="dailyMinutes">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>Meaningful Breaths:</span>
+                        <span id="dailyBreaths">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Heart Condition Warning Modal -->
+    <div class="heart-warning-modal" id="heartWarningModal">
+        <div class="heart-warning-content">
+            <h3>🚨 CRITICAL HEALTH WARNING</h3>
+            <div class="medical-warning">
+                <p><strong>BREATH RETENTION CAN BE DANGEROUS OR FATAL FOR HEART PATIENTS</strong></p>
+                <p>Enabling breath holds (retention/kumbhaka) can cause:</p>
+                <ul>
+                    <li>Sudden blood pressure changes</li>
+                    <li>Cardiac arrhythmias</li>
+                    <li>Heart attacks in vulnerable individuals</li>
+                    <li>Fainting or oxygen deprivation</li>
+                </ul>
+                <p><strong>STATUTORY WARNING: This practice is contraindicated for anyone with heart conditions, blood pressure issues, respiratory problems, pregnancy, or anxiety disorders.</strong></p>
+                <p><em>By proceeding, you acknowledge you have consulted with a qualified healthcare provider and assume full responsibility for any risks.</em></p>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-danger" onclick="confirmHeartWarning()">I Accept Full Responsibility</button>
+                <button class="btn btn-secondary" onclick="cancelHeartWarning()">Cancel - Keep Me Safe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal for Beginners -->
+    <div class="help-modal" id="helpModal">
+        <div class="help-content">
+            <button class="close-help" onclick="closeHelp()">&times;</button>
+            <h3>🧘‍♀️ Beginner's Guide to Breath Practice</h3>
+            
+            <p><strong>Welcome to your journey of conscious breathing!</strong> This tool helps you develop consistent breath patterns and build muscle memory for independent practice.</p>
+            
+            <h3>🎯 Getting Started (Dip Your Toes):</h3>
+            <ul>
+                <li><strong>Start Simple:</strong> Use the default 4-6 pattern (4 seconds in, 6 seconds out)</li>
+                <li><strong>Short Sessions:</strong> Begin with 3-5 minute sessions</li>
+                <li><strong>Follow the Circle:</strong> Breathe in as it expands, out as it contracts</li>
+                <li><strong>Use Mantras:</strong> Let the words guide your mind during each breath</li>
+            </ul>
+
+            <h3>🌟 Default Settings (Isha Yoga Inspiration):</h3>
+            <p>The default mantras are inspired by Sadhguru's <em>Miracle Mind</em> application from Isha Yoga:</p>
+            <ul>
+                <li><strong>Inhale:</strong> "I am not the body" - Releasing physical identification</li>
+                <li><strong>Exhale:</strong> "I am not even the mind" - Transcending mental boundaries</li>
+            </ul>
+
+            <h3>⚙️ Customization Options:</h3>
+            <ul>
+                <li><strong>Adjust Timing:</strong> Find your comfortable rhythm</li>
+                <li><strong>Personal Mantras:</strong> Use words that resonate with your practice</li>
+                <li><strong>Add Holds:</strong> Advanced practitioners can include retention phases</li>
+                <li><strong>Sound Cues:</strong> Optional audio guidance for timing</li>
+            </ul>
+
+            <h3>🎯 Building Independence:</h3>
+            <p>The goal is developing your internal rhythm so you can practice anywhere without the tool. Start with visual guidance, then gradually rely more on your internal timing.</p>
+
+            <h3>⚠️ IMPORTANT SAFETY WARNINGS:</h3>
+            <div class="medical-warning">
+                <h4>🚨 STATUTORY MEDICAL DISCLAIMER</h4>
+                <p><strong>DO NOT USE breath retention (hold phases) if you have:</strong></p>
+                <p>• Heart conditions, cardiac problems, arrhythmias<br>
+                • High or low blood pressure<br>
+                • Respiratory disorders (asthma, COPD, etc.)<br>
+                • Are pregnant or have anxiety disorders<br>
+                • Any serious medical condition</p>
+                <p><strong>ALWAYS consult your healthcare provider before practicing pranayama with retention.</strong></p>
+                <p><em>This application is for educational purposes only and does not constitute medical advice.</em></p>
+            </div>
+
+            <h3>⚠️ General Safety Notes:</h3>
+            <ul>
+                <li>Never strain or force your breathing</li>
+                <li>Start with shorter durations and build gradually</li>
+                <li>Stop immediately if you feel dizzy, faint, or uncomfortable</li>
+                <li>Extended patterns (>5s in, >8s out) need experience</li>
+                <li><strong>NEVER use breath retention if you have heart conditions, blood pressure issues, respiratory problems, or are pregnant</strong></li>
+                <li><strong>Consult your healthcare provider before starting any pranayama practice</strong></li>
+            </ul>
+
+            <p><em>Remember: This is your practice. Adapt everything to what feels right for your body and spiritual journey.</em></p>
+        </div>
+    </div>
+
+    <!-- Safety Warning Modal -->
+    <div class="modal" id="safetyModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="modal-content">
+            <h3>⚠️ Extended Pattern Warning</h3>
+            <p>You've set a breathing pattern that exceeds recommended safety limits (>5s inhale or >8s exhale). This should only be attempted by experienced practitioners.</p>
+            <p><strong>Are you sure you want to continue?</strong></p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="confirmExtendedPattern()">Yes, I'm Experienced</button>
+                <button class="btn btn-secondary" onclick="cancelExtendedPattern()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let isSessionActive = false;
+        let isPaused = false;
+        let currentPhase = 'ready'; // ready, inhale, hold, exhale
+        let phaseTimer = null;
+        let sessionTimer = null;
+        let sessionStartTime = null;
+        let totalBreaths = 0;
+        let currentCycle = 0;
+        let phaseTimeRemaining = 0;
+        let sessionTimeRemaining = 0;
+        
+        // Audio context for sound cues
+        let audioContext = null;
+
+        // DOM elements
+        const breathCircle = document.getElementById('breathCircle');
+        const breathText = document.getElementById('breathText');
+        const mantraText = document.getElementById('mantraText');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const sessionInfo = document.getElementById('sessionInfo');
+        const backgroundAnimation = document.getElementById('backgroundAnimation');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+
+        // Settings
+        const inhaleTimeInput = document.getElementById('inhaleTime');
+        const exhaleTimeInput = document.getElementById('exhaleTime');
+        const holdTimeInput = document.getElementById('holdTime');
+        const sessionDurationInput = document.getElementById('sessionDuration');
+        const enableHoldCheckbox = document.getElementById('enableHold');
+        const enableSoundCheckbox = document.getElementById('enableSound');
+        const inhaleMantraInput = document.getElementById('inhaleMantra');
+        const exhaleMantraInput = document.getElementById('exhaleMantra');
+        const holdMantraInput = document.getElementById('holdMantra');
+
+        // Initialize app
+        function initApp() {
+            updatePattern();
+            loadDailyStats();
+            
+            // Event listeners
+            enableHoldCheckbox.addEventListener('change', toggleHoldControls);
+            [inhaleTimeInput, exhaleTimeInput, holdTimeInput, sessionDurationInput].forEach(input => {
+                input.addEventListener('change', updatePattern);
+            });
+        }
+
+        function toggleHoldControls() {
+            if (enableHoldCheckbox.checked) {
+                // Show critical heart warning first
+                document.getElementById('heartWarningModal').style.display = 'flex';
+            } else {
+                // Hide controls and warning when unchecked
+                document.getElementById('holdControls').style.display = 'none';
+                document.getElementById('holdMantraControls').style.display = 'none';
+                document.getElementById('holdWarning').style.display = 'none';
+                updatePattern();
+            }
+        }
+
+        function confirmHeartWarning() {
+            // User has accepted responsibility
+            document.getElementById('heartWarningModal').style.display = 'none';
+            
+            // Show the controls and warning
+            const holdControls = document.getElementById('holdControls');
+            const holdMantraControls = document.getElementById('holdMantraControls');
+            const holdWarning = document.getElementById('holdWarning');
+            
+            holdControls.style.display = 'block';
+            holdMantraControls.style.display = 'block';
+            holdWarning.style.display = 'block';
+            updatePattern();
+        }
+
+        function cancelHeartWarning() {
+            // User chose safety - uncheck the box
+            document.getElementById('heartWarningModal').style.display = 'none';
+            enableHoldCheckbox.checked = false;
+        }
+
+        function updatePattern() {
+            const inhale = parseInt(inhaleTimeInput.value);
+            const exhale = parseInt(exhaleTimeInput.value);
+            const hold = enableHoldCheckbox.checked ? parseInt(holdTimeInput.value) : 0;
+            const sessionMinutes = parseInt(sessionDurationInput.value);
+            
+            const patternText = hold > 0 ? `${inhale}-${hold}-${exhale}` : `${inhale}-${exhale}`;
+            document.getElementById('currentPattern').textContent = patternText;
+            document.getElementById('currentPatternDisplay').textContent = patternText;
+            
+            // Calculate estimated total breaths for this session
+            const totalCycleTime = inhale + exhale + hold; // seconds per breath cycle
+            const sessionSeconds = sessionMinutes * 60;
+            const estimatedBreaths = Math.floor(sessionSeconds / totalCycleTime);
+            
+            document.getElementById('estimatedBreaths').textContent = estimatedBreaths;
+            
+            // Update timer display instantly when session duration changes
+            if (!isSessionActive) {
+                timerDisplay.textContent = formatTime(sessionSeconds);
+                document.getElementById('timeRemainingDisplay').textContent = formatTime(sessionSeconds) + ' remaining';
+            }
+        }
+
+        // Panel management functions
+        function togglePanel(panelType) {
+            const panel = document.getElementById(panelType + 'Panel');
+            const toggle = document.getElementById(panelType + 'Toggle');
+            
+            if (panel.classList.contains('expanded')) {
+                // Collapse
+                panel.classList.remove('expanded');
+                toggle.classList.remove('active');
+            } else {
+                // Expand
+                panel.classList.add('expanded');
+                toggle.classList.add('active');
+                
+                // Close other panel if open
+                const otherPanelType = panelType === 'settings' ? 'stats' : 'settings';
+                const otherPanel = document.getElementById(otherPanelType + 'Panel');
+                const otherToggle = document.getElementById(otherPanelType + 'Toggle');
+                otherPanel.classList.remove('expanded');
+                otherToggle.classList.remove('active');
+            }
+        }
+
+        // Help system functions
+        function showHelp() {
+            document.getElementById('helpModal').style.display = 'flex';
+        }
+
+        function closeHelp() {
+            document.getElementById('helpModal').style.display = 'none';
+        }
+
+        // Close panels when clicking outside
+        document.addEventListener('click', function(event) {
+            const settingsPanel = document.getElementById('settingsPanel');
+            const statsPanel = document.getElementById('statsPanel');
+            const settingsToggle = document.getElementById('settingsToggle');
+            const statsToggle = document.getElementById('statsToggle');
+            const helpModal = document.getElementById('helpModal');
+            const helpContent = document.querySelector('.help-content');
+            const helpToggle = document.querySelector('.help-toggle');
+            
+            // Close settings panel
+            if (!settingsPanel.contains(event.target) && !settingsToggle.contains(event.target)) {
+                settingsPanel.classList.remove('expanded');
+                settingsToggle.classList.remove('active');
+            }
+            
+            // Close stats panel
+            if (!statsPanel.contains(event.target) && !statsToggle.contains(event.target)) {
+                statsPanel.classList.remove('expanded');
+                statsToggle.classList.remove('active');
+            }
+            
+            // Close help modal when clicking outside the content area
+            if (helpModal.style.display === 'flex' && 
+                !helpContent.contains(event.target) && 
+                !helpToggle.contains(event.target)) {
+                closeHelp();
+            }
+        });
+
+        function setPreset(inhale, hold, exhale) {
+            inhaleTimeInput.value = inhale;
+            holdTimeInput.value = hold;
+            exhaleTimeInput.value = exhale;
+            
+            if (hold > 0) {
+                enableHoldCheckbox.checked = true;
+                toggleHoldControls();
+            } else {
+                enableHoldCheckbox.checked = false;
+                toggleHoldControls();
+            }
+            
+            updatePattern();
+        }
+
+        function checkSafetyLimits() {
+            const inhale = parseInt(inhaleTimeInput.value);
+            const exhale = parseInt(exhaleTimeInput.value);
+            
+            if (inhale > 5 || exhale > 8) {
+                document.getElementById('safetyModal').style.display = 'flex';
+                return false;
+            }
+            return true;
+        }
+
+        function confirmExtendedPattern() {
+            document.getElementById('safetyModal').style.display = 'none';
+            beginSession();
+        }
+
+        function cancelExtendedPattern() {
+            document.getElementById('safetyModal').style.display = 'none';
+            // Reset to safe values
+            if (parseInt(inhaleTimeInput.value) > 5) inhaleTimeInput.value = 5;
+            if (parseInt(exhaleTimeInput.value) > 8) exhaleTimeInput.value = 8;
+            updatePattern();
+        }
+
+        function startSession() {
+            if (!checkSafetyLimits()) return;
+            beginSession();
+        }
+
+        function beginSession() {
+            if (isPaused) {
+                resumeSession();
+                return;
+            }
+
+            isSessionActive = true;
+            isPaused = false;
+            sessionStartTime = Date.now();
+            totalBreaths = 0;
+            currentCycle = 0;
+            
+            const sessionDuration = parseInt(sessionDurationInput.value) * 60; // Convert to seconds
+            sessionTimeRemaining = sessionDuration;
+            
+            // Update UI
+            startBtn.classList.add('hidden');
+            pauseBtn.classList.remove('hidden');
+            stopBtn.classList.remove('hidden');
+            
+            // Initialize audio context for sound cues
+            if (enableSoundCheckbox.checked && !audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            // Start session timer
+            sessionTimer = setInterval(updateSessionTimer, 1000);
+            
+            // Start breathing cycle
+            startInhale();
+            
+            sessionInfo.textContent = "Session in progress";
+            updateStats();
+        }
+
+        function pauseSession() {
+            isPaused = true;
+            clearTimeout(phaseTimer);
+            clearInterval(sessionTimer);
+            
+            pauseBtn.classList.add('hidden');
+            startBtn.classList.remove('hidden');
+            startBtn.textContent = "▶️ Resume";
+            
+            breathText.textContent = "Paused";
+            currentPhase = 'paused';
+            updateStats();
+        }
+
+        function resumeSession() {
+            isPaused = false;
+            startBtn.classList.add('hidden');
+            pauseBtn.classList.remove('hidden');
+            startBtn.textContent = "▶️ Start Practice";
+            
+            sessionTimer = setInterval(updateSessionTimer, 1000);
+            
+            // Resume from current phase
+            if (currentPhase === 'inhale') startInhale();
+            else if (currentPhase === 'hold') startHold();
+            else if (currentPhase === 'exhale') startExhale();
+        }
+
+        function stopSession() {
+            isSessionActive = false;
+            isPaused = false;
+            clearTimeout(phaseTimer);
+            clearInterval(sessionTimer);
+            
+            // Reset UI
+            startBtn.classList.remove('hidden');
+            pauseBtn.classList.add('hidden');
+            stopBtn.classList.add('hidden');
+            startBtn.textContent = "▶️ Start Practice";
+            
+            // Reset visual state
+            breathCircle.className = 'breath-circle';
+            backgroundAnimation.className = 'background-animation bg-neutral';
+            breathText.textContent = "Session Complete";
+            mantraText.textContent = "";
+            currentPhase = 'ready';
+            
+            // Update daily stats
+            saveDailyStats();
+            
+            // Reset display
+            const sessionDuration = parseInt(sessionDurationInput.value);
+            timerDisplay.textContent = formatTime(sessionDuration * 60);
+            sessionInfo.textContent = `Session completed! ${totalBreaths} breaths in total.`;
+            
+            updateStats();
+        }
+
+        function startInhale() {
+            if (!isSessionActive || isPaused) return;
+            
+            currentPhase = 'inhale';
+            const duration = parseInt(inhaleTimeInput.value) * 1000;
+            phaseTimeRemaining = duration / 1000;
+            
+            // Visual updates
+            breathCircle.className = 'breath-circle inhaling';
+            backgroundAnimation.className = 'background-animation bg-inhale';
+            breathText.textContent = "Breathe In";
+            mantraText.textContent = inhaleMantraInput.value;
+            
+            // Sound cue
+            if (enableSoundCheckbox.checked) playTone(440, 0.1); // A4 note
+            
+            // Add ripple effect
+            createRipple();
+            
+            phaseTimer = setTimeout(() => {
+                if (enableHoldCheckbox.checked) {
+                    startHold();
+                } else {
+                    startExhale();
+                }
+            }, duration);
+            
+            updateStats();
+        }
+
+        function startHold() {
+            if (!isSessionActive || isPaused) return;
+            
+            currentPhase = 'hold';
+            const duration = parseInt(holdTimeInput.value) * 1000;
+            phaseTimeRemaining = duration / 1000;
+            
+            // Visual updates
+            breathCircle.className = 'breath-circle holding';
+            backgroundAnimation.className = 'background-animation bg-hold';
+            breathText.textContent = "Hold";
+            mantraText.textContent = holdMantraInput.value;
+            
+            // Sound cue
+            if (enableSoundCheckbox.checked) playTone(554, 0.1); // C#5 note
+            
+            phaseTimer = setTimeout(startExhale, duration);
+            updateStats();
+        }
+
+        function startExhale() {
+            if (!isSessionActive || isPaused) return;
+            
+            currentPhase = 'exhale';
+            const duration = parseInt(exhaleTimeInput.value) * 1000;
+            phaseTimeRemaining = duration / 1000;
+            
+            // Visual updates
+            breathCircle.className = 'breath-circle exhaling';
+            backgroundAnimation.className = 'background-animation bg-exhale';
+            breathText.textContent = "Breathe Out";
+            mantraText.textContent = exhaleMantraInput.value;
+            
+            // Sound cue
+            if (enableSoundCheckbox.checked) playTone(330, 0.1); // E4 note
+            
+            phaseTimer = setTimeout(() => {
+                completeCycle();
+                startInhale();
+            }, duration);
+            
+            updateStats();
+        }
+
+        function completeCycle() {
+            currentCycle++;
+            totalBreaths++;
+            updateStats();
+        }
+
+        function updateSessionTimer() {
+            if (sessionTimeRemaining <= 0) {
+                stopSession();
+                return;
+            }
+            
+            sessionTimeRemaining--;
+            timerDisplay.textContent = formatTime(sessionTimeRemaining);
+            document.getElementById('timeRemaining').textContent = formatTime(sessionTimeRemaining);
+            document.getElementById('timeRemainingDisplay').textContent = formatTime(sessionTimeRemaining) + ' remaining';
+        }
+
+        function updateStats() {
+            document.getElementById('currentCycle').textContent = currentCycle;
+            document.getElementById('totalBreaths').textContent = totalBreaths;
+            document.getElementById('currentPhase').textContent = currentPhase.charAt(0).toUpperCase() + currentPhase.slice(1);
+        }
+
+        function createRipple() {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.width = '20px';
+            ripple.style.height = '20px';
+            ripple.style.left = '50%';
+            ripple.style.top = '50%';
+            ripple.style.marginLeft = '-10px';
+            ripple.style.marginTop = '-10px';
+            
+            breathCircle.appendChild(ripple);
+            
+            setTimeout(() => {
+                if (ripple.parentNode) {
+                    ripple.parentNode.removeChild(ripple);
+                }
+            }, 2000);
+        }
+
+        function playTone(frequency, duration) {
+            if (!audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function loadDailyStats() {
+            const today = new Date().toDateString();
+            const stats = JSON.parse(localStorage.getItem(`breathStats_${today}`)) || {
+                sessions: 0,
+                minutes: 0,
+                breaths: 0
+            };
+            
+            document.getElementById('dailySessions').textContent = stats.sessions;
+            document.getElementById('dailyMinutes').textContent = stats.minutes;
+            document.getElementById('dailyBreaths').textContent = stats.breaths;
+        }
+
+        function saveDailyStats() {
+            const today = new Date().toDateString();
+            const currentStats = JSON.parse(localStorage.getItem(`breathStats_${today}`)) || {
+                sessions: 0,
+                minutes: 0,
+                breaths: 0
+            };
+            
+            const sessionMinutes = Math.round((Date.now() - sessionStartTime) / 60000);
+            currentStats.sessions++;
+            currentStats.minutes += sessionMinutes;
+            currentStats.breaths += totalBreaths;
+            
+            localStorage.setItem(`breathStats_${today}`, JSON.stringify(currentStats));
+            loadDailyStats();
+        }
+
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
